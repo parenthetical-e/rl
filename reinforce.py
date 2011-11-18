@@ -67,9 +67,10 @@ def b_td_0(rewards,states,alpha):
 		Returns Qs a dict of lists and RPEs (list), in that order.
 	"""
 	
-	## From: 
-	## Sutton And Barto, Reinforcement Learning: An Introduction, MIT Press, 1998.
-	##
+	## Taken form,
+	## Sutton And Barto, Reinforcement Learning: 
+	## An Introduction, MIT Press, 1998,
+	## TD is:
 	## Intializa V(s) and pi (policy)
 	## Repeat (for each trial)
 	## 	Intializa s
@@ -83,35 +84,45 @@ def b_td_0(rewards,states,alpha):
 	gamma = 1
 
 	## Init V_dict, and RPE_list
-	## Start V_intial as 0. RPE is empty
-	## so V and RPE are in sink
-	s_names = set(states)
+	s_names = list(set(states))
 	V_dict = {}
 	RPE_dict = {}
-	for n in s_names:
-		V_dict[n] = [0.]
-		RPE_dict[n] = []
+	for s in s_names:
+		V_dict[s] = [0.]
+		RPE_dict[s] = []
+			# RPE should always 
+			# be n-1 compared to V
 
-	for step in range(size(states)-1):
+	for step in range(len(states)-1):
 		r = rewards[step]
 		s = states[step]
 		s_plus = states[step+1]
-		
-		## There is nothing to calculate for the 
-		## state before the terminal so go to next 
-		## step
-		if (s_plus == 0) | (s_plus == '0'):
-			print('Skipping 0.')
+
+		## Define values but then chck and 
+		## make sure were not in or before 
+		## a terminal state.
+		V_s = V_dict[s][-1]
+		V_s_plus = V_dict[s_plus][-1]
+
+		if (s == 0) | (s == '0'):
+			print '@NULL'
 			continue
+				# If we are terminal, terminate 
+		elif (s_plus == 0) | (s_plus == '0'):
+			V_s_plus = 0
+				# if the next state is terminal,
+				# V_s_plus must be zero;
+				# enforce that.
 
-		V_s = V_dict[s]
-		V_s_plus = V_dict[s_plus]
+		print('step{0}, s{1}, s_plus{3}, r{2}'.format(step,s,r,s_plus))
 
-		RPE = r + gamma * V_s_plus - V_s
-		V_s = V_s + alpha * RPE
-
-		V_dict[s] = V_dict[s].append(V_s)
-		RPE_dict[s] = RPE_dict[s].append(RPE)
+		## And, finally, do the TD calculations.
+		RPE = r + (gamma * (V_s_plus - V_s))
+		V_s_new = V_s + (alpha * RPE)
+		
+		print '\t\tRPE {0}, V_s {1}'.format(RPE,V_s)
+		V_dict[s].append(V_s_new)
+		RPE_dict[s].append(RPE)
 
 	return V_dict, RPE_dict
 
