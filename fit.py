@@ -32,8 +32,12 @@ def ml_delta(acc,states,res):
 		log_L = sum([np.log(p) for p in p_values])
 #		p_log[p_cnt] = p_values
 		
-		if p_cnt == 0: best_log_L = deepcopy(log_L)
-			# init best_log_L on first go
+		if p_cnt == 0: 
+			best_log_L = deepcopy(log_L)
+			best_par = (alpha,beta)
+				# init best_log_L and best_par
+				# on first go
+
 
 		if log_L > best_log_L:
 			print('Improvement - L:{0}, alpha:{1}, beta:{2}'.format(
