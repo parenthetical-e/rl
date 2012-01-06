@@ -9,14 +9,8 @@ task).
 
 def b_delta(rewards,states,alpha):
 	"""
-	Implements the Resorla-Wagner (delta) learning rule. Of course,
-	if multiple states are chain together (in reality) they are 
-	treated as independent; use td_0() or similar for state-spaces of
-	order 1 or larger.  V_intial is 0. 
-	
-	Note: Null states are silently skipped.
-	
-		Returns seperate dicts for Qs and RPEs, in that order.
+	Implements the Resorla-Wagner (delta) learning rule. 
+	V_intial is 0.  Note: Null (0 or '0') states are silently skipped.
 	"""
 
 	# Init
@@ -37,6 +31,46 @@ def b_delta(rewards,states,alpha):
 
 		## the Delta rule:
 		RPE = r - V
+		V_new = V + alpha * RPE
+
+		## Store and shift V_new to
+		## V for next iter	
+		V_dict[s].append(V_new) 
+			
+		## Store RPE 
+		RPE_dict[s].append(RPE)
+
+	return V_dict, RPE_dict
+
+
+def b_delta_distance(rewards,states,distances,alpha):
+	"""
+	Implements the delta learning rule where the reward value is 
+	diminshed by the provded distances. V_intial is 0.  Note: Null 
+	(0 or '0') states are silently skipped.
+	
+	Reducing the reward value by the distance between a reward exmplar 
+	and its (possible) category representation is the subject of 
+	my dissertation research.
+	"""
+	# Init
+	s_names = set(states)
+	V_dict = {}
+	RPE_dict = {}
+	for s in s_names:
+		V_dict[s] = [0.]
+		RPE_dict[s] = []
+	
+	for r,s,d in zip(rewards,states,distances):
+		
+		## Skip terminal states
+		if (s == 0) | (s == '0'):
+			continue
+
+		V = V_dict[s][-1]
+
+		## the Delta rule:
+		RPE = r/d - V
 		V_new = V + alpha * RPE
 
 		## Store and shift V_new to
