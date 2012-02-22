@@ -1,8 +1,5 @@
-__all__ = ['reinforce','policy','misc','fit','plot','test','similarity']
-import reinforce
-import policy
-import misc
-import fit
-import plot
-import test
-import similarity
+__all__ = ['base','rlalgorithms','sim','spaces']
+import base
+import rlalgorithms
+import sim
+import spaces

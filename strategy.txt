@@ -1,0 +1,6 @@
+An instance of a Classes is, by its very nature, a state in the Markov sense.
+I take avantage of thie theoretical overlap creating a Class (RL) which stores only this iterations.  Except for the history dict.
+
+As a result, the RL alogritmns are coded to do one step only. As are the state and reward spaces the agents must navigates (thanks to pythons generator functions).
+
+This approach, I hope, offers both an intuitive desgin and a easy flexiblity: adding an alogritmn is as simple as adding its error and update rules.  Adding a state and/or reward spaces is as simple as creating a generator function.
