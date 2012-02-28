@@ -57,12 +57,23 @@ def softmax(values,states,beta):
 		## If there is only one state
 		## the calculation greatly 
 		## simplfies.  Use that.
-		softmax_1s = lambda x: np.exp(beta*x) / (1 + np.exp(beta*x))
-		[p_values.append(softmax_1s(v)) for v in values]
+		
+		# Vectorize...
+		values = np.array(values)
+		bv = beta*values
+		p_values = np.exp(bv) / (1 + np.exp(bv))
+		p_values = p_values.tolist()
+		
+		# Old pure python
+		# softmax_1s = lambda x: np.exp(beta*x) / (1 + np.exp(beta*x))
+		# [p_values.append(softmax_1s(v)) for v in values]
 	else:
 		v_options = {}
-		for n in names: v_options[n] = 0.000001
+		for n in names: 
+			v_options[n] = 0.000001
+		
 		for ii,v in enumerate(values):
+			
 			## Find v_options for this iteration.
 			values_to_ii = values[:ii]
 			values_to_ii.reverse()
@@ -71,15 +82,14 @@ def softmax(values,states,beta):
 			for n in set(states_to_ii):
 				v_options[n] = values_to_ii[states_to_ii.index(n)]
 
-#			print('***************************')
-#			print('v_options: {0}',format(v_options))			
-#			print('v',v)
-#			print('s',states[ii])
-#			print('v_op',v_options.values())
-
 			## Softmax:
-			p_0 = np.exp(beta*v)/sum(
-					[np.exp(beta*op) for op in v_options.values()] )
+			## Vectorize:
+			vops = np.array(v_options.volues())
+			p_0 = np.exp(beta*v)/np.sum(beta*vops)
+			
+			# Old pure Python:
+			# p_0 = np.exp(beta*v)/sum(
+			# 					[np.exp(beta*op) for op in v_options.values()] )
 			p_values.append(p_0)
 						
 	return p_values
