@@ -1,6 +1,16 @@
-An instance of a Classes is, by its very nature, a state in the Markov sense.
-I take avantage of thie theoretical overlap creating a Class (RL) which stores only this iterations.  Except for the history dict.
+""" 
+Agent learns values and policies from errors.  We'll call this ethics. 
 
-As a result, the RL alogritmns are coded to do one step only. As are the state and reward spaces the agents must navigates (thanks to pythons generator functions).
+If he is good he gets more rewards.
 
-This approach, I hope, offers both an intuitive desgin and a easy flexiblity: adding an alogritmn is as simple as adding its error and update rules.  Adding a state and/or reward spaces is as simple as creating a generator function.
+Values and policies intersect right and wrong leading to errors.
+
+In space, right and wrong rest in one state or some other.  
+ 
+Spaces don't exist till Agent arrives.  Next!
+
+Agent lives in Markov's world.  He is dumb.  He can almost never
+remember any history.
+
+When told to run, he runs.  But you have to tell him for how long.
+"""

@@ -1,8 +1,8 @@
 from collections import defaultdict
-import rl
+from rl.base import Agent
 	
-class Behave(rl.base.RL):
-	""" A subclass of RL with mojo for fitting behavioral data. """
+class Behave(Agent):
+	""" A subclass of Agent with mojo for fitting behavioral data. """
 	
 	def __init__(self):
 		self.best_log_L = -0.000000000000000000000001

@@ -1,11 +1,29 @@
 from collections import defaultdict
+""" 
+The base is the Agent. But an Agent needs his attributes. You have to 
+load em before you can go a' learning.
+"""
 
-class RL(N):
+class Agent(N):
 	""" 
-	A class for studying Reinforcement Learning algorithms.
+	Agent learns values and policies from errors.  We'll call this ethics. 
+	
+	If he is good he gets more rewards.
+	
+	Values and policies intersect right and wrong leading to errors.
+
+	In space, right and wrong rest in one state or some other.  
+	 
+	Spaces don't exist till Agent arrives.  Next!
+	
+	Agent lives in Markov's world.  He is dumb.  He can almost never
+	remember any history.
+	
+	When told to run, he runs.  But you have to tell him for how long.
 	"""
-	def __init__(self,N):
-		self.N = N
+
+	def __init__(self):
+		self.N = None
 		self.n = 0
 		self.r = None
 		self.rpe = None
@@ -29,31 +47,29 @@ class RL(N):
 	
 	# Set attributes for each of the necessary RL functions
 	# and their params
-	def set_rperror(self,alg,params):
-		self.rperror = alg
-		self.rperror_params = params
+	def impose_ethics(self,v={'':{}},p={'':{}},e={'':{}}):
+		""" Each has a name and some parameters """
+		from rl.rlalgorithms import value,error,policy
+		
+		self.error_f = getattr(v.keys(),error)
+		self.error_f_params = v.values()
+		
+		self.value_f = getattr(v.keys(),value)
+		self.value_f_params = v.values()
+		
+		self.policy_f = getattr(p.keys(),policy)
+		self.policy_f_params = p.values()
 	
 	
-	def set_value(self,alg,params):
-		self.value = alg
-		self.value_params = params
-	
-
-	def set_policy(self,alg,params):
-		self.policy = alg
-		self.policy_params = params
-	
-
-	def set_state_space(self,gen,params):
-		self.state_space = gen(**params)
-			# On each iteration this should yield an update for self.s,
-			# the current state
-	
-
-	def set_reward_space(self,gen,params):
-		self.reward_space = gen(**params)
-			# On each iteration this should yield an update for self.r,
-			# the current reward
+	def embed_into_environment(self,s={'':{}},r={'':{}}):		
+		""" Embed the agent in state (s) and reward (r) spaces. """
+		from rl.spaces import rewards,states
+		
+		self.state_space_f = getattr(s.keys(),states)
+		self.state_space_f_params = s.values()
+		
+		self.reward_space_f = getattr(r.keys(),rewards)
+		self.reward_space_f = r.values()
 	
 
 	def _update_history(self):
@@ -75,7 +91,7 @@ class RL(N):
 	
  
 	def run(self,N):
-		""" Learn by reinforcement. Take N steps. """
+		""" Learn by reinforcement. Run N steps. """
 
 		self.N = N
 		for self.n in range(self.N):
@@ -84,7 +100,7 @@ class RL(N):
 			# based on current 's'
 			self.r = self.reward_space.next()
 			self.s = self.state_space.next()
-			self.v = self.get_from_history('v',1)	
+			self.v = self.get_from_history(self,s,'v',1)	
 
 			# 1.1. If s is null, zero everything and move on
 			if (self.s is 0) or (self.s is '0'):
@@ -99,34 +115,29 @@ class RL(N):
 				continue
 
 			# 2. Calc rpe, update sefl.rpe
-			self.rpe = self.rperror(**self.rperror_params)
+			self.error = self.error_f(**self.error_f_params)
 
 			# 3. Calc value, update self.v
-			self.v = self.value(**self.value_params)
+			self.v = self.value_f(**self.value_f_params)
 
 			# 4. Pick next state (pretend to anyway, transitions 
 			# are really define by [states]).
-			self.sprime, self.p_sprime = self.policy(**self.policy_params)
+			self.sprime, self.p_sprime = self.policy_f(
+					**self.policy_f_params)
 
 			# 5. Update histroy and the state index
 			self._update_history()
 			self._update_state_index()		
-	
 
-	def get_from_history(self,name,num=1):
+
+	def get_from_history(self,s,name,num=1):
 		"""
-		Uses current state [s] and [name] to retrieve the last [num]
-		entries from history.
+		Uses current state [s] and [name] of the data to retrieve the 
+		last [num] entries from history.  
+		
+		[num] should be greater than 0.
 		"""
 
-		if num == 0:
-			num = 1
-			## 0 makes no sense assume they intended 1
-
-		locations = self.s_index[self.s][-num]
+		locations = self.s_index[s][-num]
+		
 		return self.history[name][locations]
-	
-	def write_history(name='history.csv'):
-		"""  """
-		pass
-	

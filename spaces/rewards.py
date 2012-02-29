@@ -1,14 +1,14 @@
-""" Simulate reward spaces. """
+""" Generate reward spaces. """
 import numpy as np
 import scipy.stats as stats
 
-def random(N,p):
+def random(p,N):
 	"""
 	Yield a single trials worth of random behavioral accuracy. P(1) = p.
 	"""
 
 	reward_space = np.random.binomial(1,p,N)
-	for r in reward_space:
+	for r in reward_space: 
 		yield r
 
 	# state_space = np.array(state_space)
@@ -38,7 +38,6 @@ def learn_logistic(N):
 	learning.
 	"""
 
-	
 	# Simulate learning:
 	# Create a noisy range for the CDF,
 	trials = np.arange(.01,10,10/float(N))
@@ -51,7 +50,7 @@ def learn_logistic(N):
 	p_values = p_tmp
 		
 	for p in p_values:
-		yield int(np.random.binomial(1,p,(1)))
+		yield np.random.binomial(1,p))
 	
 
 

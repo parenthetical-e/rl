@@ -1,4 +1,4 @@
-""" Create state spaces """
+""" Generate state spaces """
 import numpy as np
 
 def random(N,k):

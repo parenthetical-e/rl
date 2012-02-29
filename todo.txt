@@ -1,0 +1,1 @@
+Fix softmax.  In policy is should just use

@@ -2,8 +2,8 @@
 Update value estimates.
 """
 
-def delta(v,rpe,alpha):
-	return v + alpha * error
+def delta(alpha):
+	return self.v + alpha * self.error
 
-def td(v,v_old,rpe,alpha,gamma=0):
-	pass
+def td(alpha,gamma):
+	pass 
