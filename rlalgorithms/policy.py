@@ -27,6 +27,7 @@ def softmax(self,beta):
 	
 	# TODO p weighted sampling of known_states goes here
 	# http://prxq.wordpress.com/2006/04/17/the-alias-method/
+	# http://stackoverflow.com/questions/352670/weighted-random-selection-with-and-without-replacement
 	# for an example of how to do this.  None of pythons libs seem
 	# to support it.
 		
