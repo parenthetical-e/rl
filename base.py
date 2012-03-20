@@ -1,22 +1,23 @@
 from collections import defaultdict
 """ 
-The base is the Agent. But an Agent needs his attributes. You have to 
-load em before you can go a' learning.
+The base is the Agent. You'll want an instance. But an agent needs his attributes. You have to load em before you can go a' learning. 
+
+Specifically -- .impose_ethics() and .embed_into_environment() need to be
+called before one can run.
 """
 
 class Agent(N):
 	""" 
 	Agent learns values and policies from errors.  We'll call this ethics. 
 	
-	If he is good he gets more rewards.
+	It's ethical to be really greedy.  Values and policies intersect 
+	right and wrong, leading to errors.
 	
-	Values and policies intersect right and wrong leading to errors.
-
-	In space, right and wrong rest in one state or some other.  
+	In space, right and wrong rest in one state or some other.
 	 
-	Spaces don't exist till Agent arrives.  Next!
+	Space doesn't exist till Agent arrives.  Next!
 	
-	Agent lives in Markov's world.  He is dumb.  He can almost never
+	Agent lives in only Markov's world.  He is dumb.  He can almost never
 	remember any history.
 	
 	When told to run, he runs.  But you have to tell him for how long.
