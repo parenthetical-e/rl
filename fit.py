@@ -9,7 +9,6 @@ def ml_delta(acc,states,res):
 	"""
 	from itertools import product
 	from copy import deepcopy
-	import numpy as np
 
 	params = ((0.01,1),(0.01,5))
 		# alpha, beta ranges
@@ -47,7 +46,6 @@ def ml_delta(acc,states,res):
 
 		p_cnt += 1
 
-#	return (best_par,best_log_L,p_log)
 	return (best_par,best_log_L)
 	
 
