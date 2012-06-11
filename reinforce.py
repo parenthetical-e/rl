@@ -6,6 +6,7 @@ accuracy data.  If they begin with a 's_' there were designed to simulate
 'online' learning (e.g. an computational agent learning an N-armed bandit
 task).
 """
+import math
 
 def b_delta(rewards,states,alpha):
 	"""

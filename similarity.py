@@ -1,22 +1,33 @@
-"""
-A set of vectorized functions for measuring the similarity between two
-identically sized arrays.
-"""
+""" A set of vectorized functions for measuring similarity. """
 import numpy as np
 
+def category_prototype(x1, x2, u1, u2):
+	""" Return the 2d similarity between a lists of examplars 
+	(<x1> and <x2>) and their means (<u1> and <u2>)
+	
+	Similarity is measured by:
+		s = exp( sqrt((x1 - u1)^2) + sqrt((x2 - u2)^2) ).
+	
+	I.e. the exponential of the euclidian distance, which Shepard 
+	(Science, 1988) demonstrated acts as a 'universal law of
+	generalization'.
+	"""
+	x1 = np.array(x1)
+	x2 = np.array(x2)
+	u1 = np.array(u1)
+	u2 = np.array(u2)
+	
+	if (x1.shape != u1.shape) or (u1.shape[0] != 1):
+		raise ValueError(
+			"x1 and u1 must be the same shape or u1 must be a scalar")
 
-def cummean(x, axis=0):
-    """
-    Returns the cumulative means for <x> along <axis>.
-    """
-
-    x = np.array(x)
-
-    # N, number of samples, increases with each element.
-    N = np.arange(1, x.shape[axis] + 1)
-
-    # The cumulatve mean is the sum divided by N.
-    return np.cumsum(x, axis) / N
+	if (x2.shape != u2.shape) or (u2.shape[0] != 1):
+		raise ValueError(
+			"x2 and u2 must be the same shape or u2 must be a scalar")
+	
+	# TODO is this math right?  Double check that the subtraction below
+	# does the right thing...
+	return np.exp(l2(x1 - u1, x2 - u2))
 
 
 def l2(x1, x2, axis=0):
@@ -29,19 +40,3 @@ def l2(x1, x2, axis=0):
     distances = np.sqrt(x1 ** 2 + x2 ** 2)
 
     return distances
-
-
-def l2_cummean(x, y, axis=0):
-    """
-    For each entry i (along <axis>), and each x_i and y_i pair return the
-    distance from that point to the point representing the cumulative mean
-    of <x> and <y> from i_initial to i.
-    """
-
-    x = np.array(x)
-    y = np.array(y)
-
-    x_cmean = cummean(x, axis)
-    y_cmean = cummean(y, axis)
-
-    return l2(y - y_cmean, x - x_cmean, axis)
