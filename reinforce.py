@@ -3,7 +3,7 @@ Several reinforcement learning algorithms.
 
 If they begin with a 'b_' they were implemented allow fitting of behavioral
 accuracy data.  If they begin with a 's_' there were designed to simulate
-'online' learning (e.g. an computational agent learning an N-armed bandit
+'online' learning (e.g. a computational agent learning an N-armed bandit
 task).
 """
 import math
@@ -12,6 +12,9 @@ def b_delta(rewards,states,alpha):
 	"""
 	Implements the Resorla-Wagner (delta) learning rule.
 	V_intial is 0.  Note: Null (0 or '0') states are silently skipped.
+
+    Returns two dictionaries containing value and RPE timecourses, 
+    for each state.
 	"""
 	
 	# Init
@@ -44,7 +47,7 @@ def b_delta(rewards,states,alpha):
 	return V_dict, RPE_dict
 
 
-def b_delta_distance(rewards,states,distances,alpha):
+def b_delta_similarity(rewards,states,similarity,alpha):
 	"""
 	Implements the delta learning rule where the reward value is
 	diminshed by the provded distances. V_intial is 0.  Note: Null
@@ -53,16 +56,22 @@ def b_delta_distance(rewards,states,distances,alpha):
 	Reducing the reward value by the distance between a reward exmplar
 	and its (possible) category representation is the subject of
 	my dissertation research.
+
+    Returns two dictionaries containing value and RPE timecourses, 
+    for each state.
 	"""
+
 	# Init
 	s_names = set(states)
 	V_dict = {}
 	RPE_dict = {}
+    r_sim_dict = {}
 	for s in s_names:
 		V_dict[s] = [0.]
 		RPE_dict[s] = []
+        r_similarity[s] = []
 	
-	for r,s,d in zip(rewards,states,distances):
+	for r,s,d in zip(rewards,states,similarity):
 		
 		## Skip terminal states
 		if (s == 0) | (s == '0'):
@@ -71,9 +80,12 @@ def b_delta_distance(rewards,states,distances,alpha):
 		V = V_dict[s][-1]
 		
 		## the Delta rule:
-		RPE = r/d - V
+        r_sim = r * d
+		RPE = r_sim - V
 		V_new = V + alpha * RPE
 		
+        ## Store distance devalued reward
+        
 		## Store and shift V_new to
 		## V for next iter
 		V_dict[s].append(V_new)
@@ -81,7 +93,10 @@ def b_delta_distance(rewards,states,distances,alpha):
 		## Store RPE
 		RPE_dict[s].append(RPE)
 	
-	return V_dict, RPE_dict
+        ## Store r_sim
+        r_sim_dict[s].append(r_sim)
+
+	return V_dict, RPE_dict, r_sim_dict
 
 
 def b_td_0(rewards,states,alpha):
