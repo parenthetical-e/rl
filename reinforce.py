@@ -36,8 +36,7 @@ def b_delta(rewards,states,alpha):
         ## the Delta rule:
         RPE = r - V
         V_new = V + alpha * RPE
-        if V_new < 0.0: V_new = 0.0
-
+        
         ## Store and shift V_new to
         ## V for next iter
         V_dict[s].append(V_new)
@@ -84,8 +83,7 @@ def b_delta_similarity(rewards,states,similarity,alpha):
         r_sim = r * d
         RPE = r_sim - V
         V_new = V + alpha * RPE
-        if V_new < 0.0: V_new = 0.0
-
+        
         ## Store and shift V_new to
         ## V for next iter
         V_dict[s].append(V_new)
