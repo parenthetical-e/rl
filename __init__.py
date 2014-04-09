@@ -6,4 +6,4 @@ import misc
 import fit
 import plot
 import test
-import similarity
+#import similarity
